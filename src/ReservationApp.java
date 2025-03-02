@@ -3,24 +3,33 @@ import java.util.Scanner;
 public class ReservationApp {
     public static void main(String[] args) {
 
-        /* System.out.println("Hello and welcome!");
-        for (int i = 1; i <= 5; i++) {
-            System.out.println("i = " + i);
-        } */
-
         Scanner scanner = new Scanner(System.in);
-        String stopString = "exit";
-        String adminModeString = "1";
-        String usualModeString = "2";
-        String userInput = "";
+        boolean running = true;
 
-        while (!userInput.equals(stopString)) {
-            System.out.printf("Please, write \"%s\" for admin or \"%s\" for usual login mode (\"%s\" to exit):%n", adminModeString, usualModeString, stopString);
-            userInput = scanner.nextLine();
-//            System.out.println("Write your username to log in or sign up:");
-//            if (userInput.equals(adminModeString)) {
-//
-//            }
+        while (running) {
+            System.out.println("\n******Menu******");
+            System.out.println("0. Exit");
+            System.out.println("1. Log in or sign up");
+            int userInput = scanner.nextInt();
+            scanner.nextLine();
+            switch (userInput) {
+                case 0:
+                    running = false;
+                    System.out.println("Goodbye, enjoy your day!");
+                    break;
+
+                case 1:
+                    System.out.println("Your username:");
+                    String username = scanner.nextLine();
+
+                    // login algorithm
+
+                    break;
+
+                default:
+                    System.out.println("Invalid input, try again please.");
+                    break;
+            }
         }
 
         System.out.println("Exiting.");
