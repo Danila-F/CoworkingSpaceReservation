@@ -3,32 +3,37 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class UserServiceInMemory implements UserService {
-    private Map<String, User> users = new HashMap<>();
+    private final Map<String, User> users = new HashMap<>();
 
-    @Override
-    public User signup(String username) {
-        Scanner scanner = new Scanner(System.in);
-        int userInput = scanner.nextInt();
-        scanner.nextLine();
+    private User addUser(User user) {
+        users.put(user.getUsername(), user);
+        return user;
+    }
 
+    private User signup(String username) {
         System.out.println("Signing up...");
         System.out.println("1. Regular user");
         System.out.println("2. Admin user");
         System.out.println("0. Back");
 
+        Scanner scanner = new Scanner(System.in);
+        String userInput = scanner.nextLine();
+
         switch (userInput) {
-            case 0:
+            case "0":
                 System.out.println("Canceling creation of new user...");
                 return null;
 
-            case 1:
-                return new RegularUser(username);
+            case "1":
+                System.out.println("Welcome, " + username);
+                return addUser(new User(username, false));
 
-            case 2:
-                return new AdminUser(username);
+            case "2":
+                System.out.println("Welcome, " + username);
+                return addUser(new User(username, true));
 
             default:
-                System.out.println("Invalid input, try again please.");
+                System.out.println("Invalid input, canceling creation of new user...");
                 break;
         }
         return null;
@@ -36,6 +41,10 @@ public class UserServiceInMemory implements UserService {
 
     @Override
     public User login(String username) {
-        return null;
+        if (users.containsKey(username)) {
+            return users.get(username);
+        } else {
+            return signup(username);
+        }
     }
 }

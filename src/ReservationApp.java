@@ -5,25 +5,29 @@ public class ReservationApp {
 
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
+        UserService userService = new UserServiceInMemory();
 
         while (running) {
             System.out.println("\n******Menu******");
             System.out.println("0. Exit");
             System.out.println("1. Log in or sign up");
-            int userInput = scanner.nextInt();
-            scanner.nextLine();
+
+            String userInput = scanner.nextLine();
+
             switch (userInput) {
-                case 0:
+                case "0":
                     running = false;
                     System.out.println("Goodbye, enjoy your day!");
                     break;
 
-                case 1:
+                case "1":
                     System.out.println("Your username:");
                     String username = scanner.nextLine();
 
-                    // login algorithm
-
+                    User user = userService.login(username);
+                    if (user != null) {
+                        System.out.println("Hello, " + user.getUsername());
+                    }
                     break;
 
                 default:
