@@ -1,3 +1,6 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -10,6 +13,7 @@ public class ReservationApp {
     private User user = null;
     private final UserServiceInMemory userService = new UserServiceInMemory();
     private final WorkspaceService workspaceService = new WorkspaceServiceInMemory();
+    private final BookingService bookingService = new BookingServiceInMemory();
 
     private void run() {
         try (Scanner scanner = new Scanner(System.in)) {
@@ -81,6 +85,7 @@ public class ReservationApp {
     private void showUserMenu(Scanner scanner) {
         System.out.println("\n** Menu **");
         System.out.println("1. Log out");
+        System.out.println("2. Make reservation");
         System.out.println("0. Exit");
 
         switch (scanner.nextLine()) {
@@ -89,6 +94,9 @@ public class ReservationApp {
                 break;
             case "1":
                 logoutUser();
+                break;
+            case "2":
+                makeReservation(user, scanner);
                 break;
             default:
                 System.out.println("Invalid input, please try again.");
@@ -136,7 +144,6 @@ public class ReservationApp {
         if (workspaces.isEmpty()) {
             System.out.println("No workspaces available.");
         } else {
-            System.out.println("List of all workspaces:");
             for (Map.Entry<Integer, Workspace> entry : workspaces.entrySet()) {
                 System.out.println(entry.getValue().toString());
             }
@@ -159,6 +166,56 @@ public class ReservationApp {
             }
         } catch (NumberFormatException ex) {
             System.out.println("Invalid input.");
+        }
+    }
+
+    private void makeReservation(User user, Scanner scanner) {
+        Workspace workspace;
+        LocalDateTime startTime;
+        LocalDateTime endTime;
+
+        System.out.println("Please, choose workspace for booking:");
+        showWorkspaces();
+        if (workspaceService.getAllWorkspaces().isEmpty()) {
+            return;
+        }
+
+        try {
+            int workspaceId = Integer.parseInt(scanner.nextLine());
+            workspace = workspaceService.getAllWorkspaces().get(workspaceId);
+            if (workspace == null) {
+                System.out.println("Workspace not found.");
+                return;
+            }
+        } catch (NumberFormatException ex) {
+            System.out.println("Invalid input.");
+            return;
+        }
+
+        try {
+            String dateTimeFormat = "dd.MM.yyyy HH:mm";
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimeFormat);
+            System.out.println("Please, enter start time of booking (" + dateTimeFormat + "):");
+            startTime = LocalDateTime.parse(scanner.nextLine(), dateTimeFormatter);
+            System.out.println("Please, enter end time of booking(" + dateTimeFormat + "):");
+            endTime = LocalDateTime.parse(scanner.nextLine(), dateTimeFormatter);
+        } catch (DateTimeParseException ex) {
+            System.out.println("Invalid input.");
+            return;
+        }
+
+        if (!endTime.isAfter(startTime)) {
+            System.out.println("End time can not be earlier than start time.");
+            return;
+        }
+
+        Booking booking = bookingService.createBooking(user, workspace, startTime, endTime);
+        if (booking == null) {
+            Booking existingBooking = bookingService.findBookingForWorkspace(workspace, startTime, endTime);
+            System.out.println("This workspace is already booked from " + existingBooking.getStartTime() + " to " + existingBooking.getEndTime());
+        } else {
+            System.out.println("Booking is created:");
+            System.out.println(booking.toString());
         }
     }
 

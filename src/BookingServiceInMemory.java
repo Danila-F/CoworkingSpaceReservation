@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class BookingServiceInMemory {
+public class BookingServiceInMemory implements BookingService {
     private final Map<Integer, Booking> bookings = new TreeMap<>();
 
     private Map<Integer, Booking> getWorkspaceBookings(Workspace workspace) {
@@ -16,7 +16,7 @@ public class BookingServiceInMemory {
         return workspaceBookings;
     }
 
-    private Booking findBookingForWorkspace(Workspace workspace, LocalDateTime startTime, LocalDateTime endTime) {
+    public Booking findBookingForWorkspace(Workspace workspace, LocalDateTime startTime, LocalDateTime endTime) {
         Map<Integer, Booking> workspaceBookings = getWorkspaceBookings(workspace);
         for (Map.Entry<Integer, Booking> entry : workspaceBookings.entrySet()) {
             Booking booking = entry.getValue();
@@ -27,13 +27,7 @@ public class BookingServiceInMemory {
         return null;
     }
 
-    // private Booking createBooking(User user, Workspace workspace, LocalDateTime startTime, LocalDateTime endTime) {
-    //     boolean isAppropriate = true;
-    //     Booking existingBooking = findBookingForWorkspace(workspace, startTime, endTime);
-        
-    // }
-
-    public Booking addBooking(User user, Workspace workspace, LocalDateTime startTime, LocalDateTime endTime) {
+    private Booking addBooking(User user, Workspace workspace, LocalDateTime startTime, LocalDateTime endTime) {
         TreeMap<Integer, Booking> treeBookings = (TreeMap<Integer, Booking>) bookings;
         int newId = (treeBookings.isEmpty()) ? 0 : treeBookings.lastKey() + 1;
         Booking booking = new Booking(newId, user, workspace, startTime, endTime);
@@ -41,11 +35,20 @@ public class BookingServiceInMemory {
         return booking;
     }
 
-    private Map<Integer, Booking> getAllBookings() {
+     public Booking createBooking(User user, Workspace workspace, LocalDateTime startTime, LocalDateTime endTime) {
+         Booking existingBooking = findBookingForWorkspace(workspace, startTime, endTime);
+         if (existingBooking == null) {
+             return addBooking(user, workspace, startTime, endTime);
+         } else {
+             return null;
+         }
+     }
+
+    public Map<Integer, Booking> getAllBookings() {
         return new TreeMap<>(bookings);
     }
 
-    private Map<Integer, Booking> getUserBookings(User user) {
+    public Map<Integer, Booking> getUserBookings(User user) {
         Map<Integer, Booking> userBookings = new HashMap<>();
         for (Map.Entry<Integer, Booking> entry : bookings.entrySet()) {
             if (entry.getValue().getUser().equals(user)) {
@@ -53,10 +56,6 @@ public class BookingServiceInMemory {
             }
         }
         return userBookings;
-    }
-
-    public Map<Integer, Booking> getBookings(User user) {
-        return user.getIsAdmin() ? getAllBookings() : getUserBookings(user);
     }
 
 }
