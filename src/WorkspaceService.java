@@ -1,7 +1,7 @@
-import java.util.Scanner;
+import java.util.Map;
 
 public interface WorkspaceService {
-    Workspace createWorkspace(String description, Scanner scanner);
-    void showAllWorkspaces();
-    void editWorkspace(Scanner scanner);
+    Workspace createWorkspace(String description);
+    Map<Integer, Workspace> getAllWorkspaces();
+    boolean editWorkspace(int workspaceId, String newDescription);
 }

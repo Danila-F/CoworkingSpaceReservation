@@ -1,5 +1,4 @@
-import java.util.Scanner;
-
 public interface UserService {
-    User login(String username, Scanner scanner);
+    User signup(String username, boolean isAdmin);
+    User login(String username);
 }
