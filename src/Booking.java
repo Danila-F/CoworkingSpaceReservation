@@ -7,11 +7,11 @@ public class Booking {
     private final LocalDateTime startTime;
     private final LocalDateTime endTime;
 
-    public Booking(int id, User user, Workspace workspace, LocalDateTime starTime, LocalDateTime endTime) {
+    public Booking(int id, User user, Workspace workspace, LocalDateTime startTime, LocalDateTime endTime) {
         this.id = id;
         this.user = user;
         this.workspace = workspace;
-        this.startTime = starTime;
+        this.startTime = startTime;
         this.endTime = endTime;
     }
 
@@ -44,5 +44,13 @@ public class Booking {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(id) + ". User: " + user.getUsername() +
+        "; Workspace: " + workspace.toString() +
+        "; From: " + startTime.toString() +
+        "; To: " + endTime.toString();
     }
 }

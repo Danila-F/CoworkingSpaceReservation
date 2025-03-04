@@ -4,16 +4,12 @@ import java.util.TreeMap;
 public class WorkspaceServiceInMemory implements WorkspaceService {
     private final Map<Integer, Workspace> workspaces = new TreeMap<>();
 
-    private Workspace addWorkspace(String description) {
+    public Workspace createWorkspace(String description) {
         TreeMap<Integer, Workspace> treeWorkspaces = (TreeMap<Integer, Workspace>) workspaces;
         int newId = (treeWorkspaces.isEmpty()) ? 0 : treeWorkspaces.lastKey() + 1;
         Workspace workspace = new Workspace(newId, description);
         workspaces.put(newId, workspace);
         return workspace;
-    }
-
-    public Workspace createWorkspace(String description) {
-        return addWorkspace(description);
     }
 
     public Map<Integer, Workspace> getAllWorkspaces() {
