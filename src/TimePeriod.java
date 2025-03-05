@@ -1,9 +1,14 @@
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class TimePeriod {
+public class TimePeriod implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final LocalDateTime startTime;
     private final LocalDateTime endTime;
-    
+
     public TimePeriod(LocalDateTime startTime, LocalDateTime endTime) {
         if (startTime.isAfter(endTime)) {
             throw new IllegalArgumentException("Start time must be before end time!");
