@@ -169,15 +169,12 @@ public class ReservationApp {
         }
     }
 
-    private void makeReservation(User user, Scanner scanner) {
+    private Workspace chooseWorkspace(Scanner scanner) {
         Workspace workspace;
-        LocalDateTime startTime;
-        LocalDateTime endTime;
-
         System.out.println("Please, choose workspace for booking:");
         showWorkspaces();
         if (workspaceService.getAllWorkspaces().isEmpty()) {
-            return;
+            return null;
         }
 
         try {
@@ -185,12 +182,19 @@ public class ReservationApp {
             workspace = workspaceService.getAllWorkspaces().get(workspaceId);
             if (workspace == null) {
                 System.out.println("Workspace not found.");
-                return;
+                return null;
             }
         } catch (NumberFormatException ex) {
             System.out.println("Invalid input.");
-            return;
+            return null;
         }
+        return workspace;
+    }
+
+    private TimePeriod readDate(Scanner scanner) {
+        LocalDateTime startTime;
+        LocalDateTime endTime;
+        TimePeriod timePeriod;
 
         try {
             String dateTimeFormat = "dd.MM.yyyy HH:mm";
@@ -201,18 +205,29 @@ public class ReservationApp {
             endTime = LocalDateTime.parse(scanner.nextLine(), dateTimeFormatter);
         } catch (DateTimeParseException ex) {
             System.out.println("Invalid input.");
-            return;
+            return null;
         }
 
-        if (!endTime.isAfter(startTime)) {
-            System.out.println("End time can not be earlier than start time.");
-            return;
+        try {
+            timePeriod = new TimePeriod(startTime, endTime);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getLocalizedMessage());
+            return null;
         }
 
-        Booking booking = bookingService.createBooking(user, workspace, startTime, endTime);
+        return timePeriod;
+    }
+
+    private void makeReservation(User user, Scanner scanner) {
+        Workspace workspace = chooseWorkspace(scanner);
+        if (workspace == null) return;
+        TimePeriod timePeriod = readDate(scanner);
+        if (timePeriod == null) return;
+
+        Booking booking = bookingService.createBooking(user, workspace, timePeriod);
         if (booking == null) {
-            Booking existingBooking = bookingService.findBookingForWorkspace(workspace, startTime, endTime);
-            System.out.println("This workspace is already booked from " + existingBooking.getStartTime() + " to " + existingBooking.getEndTime());
+            Booking existingBooking = bookingService.findBookingForWorkspace(workspace, timePeriod);
+            System.out.println("This workspace is already booked " + existingBooking.getTimePeriod().toString());
         } else {
             System.out.println("Booking is created:");
             System.out.println(booking.toString());

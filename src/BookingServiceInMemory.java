@@ -1,4 +1,3 @@
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -16,29 +15,29 @@ public class BookingServiceInMemory implements BookingService {
         return workspaceBookings;
     }
 
-    public Booking findBookingForWorkspace(Workspace workspace, LocalDateTime startTime, LocalDateTime endTime) {
+    public Booking findBookingForWorkspace(Workspace workspace, TimePeriod timePeriod) {
         Map<Integer, Booking> workspaceBookings = getWorkspaceBookings(workspace);
         for (Map.Entry<Integer, Booking> entry : workspaceBookings.entrySet()) {
             Booking booking = entry.getValue();
-            if (booking.isBookedAtTime(startTime, endTime)) {
+            if (booking.isBookedAtTime(timePeriod)) {
                 return booking;
             }
         }
         return null;
     }
 
-    private Booking addBooking(User user, Workspace workspace, LocalDateTime startTime, LocalDateTime endTime) {
+    private Booking addBooking(User user, Workspace workspace, TimePeriod timePeriod) {
         TreeMap<Integer, Booking> treeBookings = (TreeMap<Integer, Booking>) bookings;
         int newId = (treeBookings.isEmpty()) ? 0 : treeBookings.lastKey() + 1;
-        Booking booking = new Booking(newId, user, workspace, startTime, endTime);
+        Booking booking = new Booking(newId, user, workspace, timePeriod);
         bookings.put(newId, booking);
         return booking;
     }
 
-     public Booking createBooking(User user, Workspace workspace, LocalDateTime startTime, LocalDateTime endTime) {
-         Booking existingBooking = findBookingForWorkspace(workspace, startTime, endTime);
+     public Booking createBooking(User user, Workspace workspace, TimePeriod timePeriod) {
+         Booking existingBooking = findBookingForWorkspace(workspace, timePeriod);
          if (existingBooking == null) {
-             return addBooking(user, workspace, startTime, endTime);
+             return addBooking(user, workspace, timePeriod);
          } else {
              return null;
          }

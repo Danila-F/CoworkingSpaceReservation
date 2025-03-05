@@ -1,18 +1,14 @@
-import java.time.LocalDateTime;
-
 public class Booking {
     private final int id;
     private final User user;
     private final Workspace workspace;
-    private final LocalDateTime startTime;
-    private final LocalDateTime endTime;
+    private final TimePeriod timePeriod;
 
-    public Booking(int id, User user, Workspace workspace, LocalDateTime startTime, LocalDateTime endTime) {
+    public Booking(int id, User user, Workspace workspace, TimePeriod timePeriod) {
         this.id = id;
         this.user = user;
         this.workspace = workspace;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.timePeriod = timePeriod;
     }
 
     public int getId() {
@@ -27,19 +23,12 @@ public class Booking {
         return workspace;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public TimePeriod getTimePeriod() {
+        return timePeriod;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public boolean isBookedAtTime(LocalDateTime fromTime, LocalDateTime toTime) {
-        boolean isFromTimeInPeriod = !fromTime.isBefore(startTime) && !fromTime.isAfter(endTime);
-        boolean isToTimeInPeriod = !toTime.isBefore(startTime) && !toTime.isAfter(endTime);
-        
-        if (isFromTimeInPeriod || isToTimeInPeriod) {
+    public boolean isBookedAtTime(TimePeriod timePeriod) {
+        if (timePeriod.isInPeriod(timePeriod.getStartTime()) || timePeriod.isInPeriod(timePeriod.getEndTime())) {
             return true;
         } else {
             return false;
@@ -50,7 +39,6 @@ public class Booking {
     public String toString() {
         return String.valueOf(id) + ". User: " + user.getUsername() +
         "; Workspace: " + workspace.toString() +
-        "; From: " + startTime.toString() +
-        "; To: " + endTime.toString();
+        "; " + timePeriod.toString();
     }
 }
