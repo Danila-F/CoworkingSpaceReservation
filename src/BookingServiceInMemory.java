@@ -57,4 +57,8 @@ public class BookingServiceInMemory implements BookingService {
         return userBookings;
     }
 
+    public boolean deleteBooking(Booking booking) {
+        return bookings.remove(booking.getId(), booking);
+    }
+
 }

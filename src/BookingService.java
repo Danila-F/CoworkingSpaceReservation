@@ -5,4 +5,5 @@ public interface BookingService {
     Map<Integer, Booking> getAllBookings();
     Map<Integer, Booking> getUserBookings(User user);
     Booking findBookingForWorkspace(Workspace workspace, TimePeriod timePeriod);
+    boolean deleteBooking(Booking booking);
 }

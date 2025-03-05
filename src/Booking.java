@@ -27,8 +27,8 @@ public class Booking {
         return timePeriod;
     }
 
-    public boolean isBookedAtTime(TimePeriod timePeriod) {
-        if (timePeriod.isInPeriod(timePeriod.getStartTime()) || timePeriod.isInPeriod(timePeriod.getEndTime())) {
+    public boolean isBookedAtTime(TimePeriod requestedTimePeriod) {
+        if (timePeriod.isInPeriod(requestedTimePeriod.getStartTime()) || timePeriod.isInPeriod(requestedTimePeriod.getEndTime())) {
             return true;
         } else {
             return false;

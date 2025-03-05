@@ -21,4 +21,8 @@ public class UserServiceInMemory implements UserService {
     public boolean userExists(String username) {
         return users.containsKey(username);
     }
+
+    public Map<String, User> getAllUsers() {
+        return users;
+    }
 }

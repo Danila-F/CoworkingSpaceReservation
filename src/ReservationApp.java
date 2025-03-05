@@ -86,6 +86,8 @@ public class ReservationApp {
         System.out.println("\n** Menu **");
         System.out.println("1. Log out");
         System.out.println("2. Make reservation");
+        System.out.println("3. Show my reservations");
+        System.out.println("4. Cancel my reservation");
         System.out.println("0. Exit");
 
         switch (scanner.nextLine()) {
@@ -98,6 +100,12 @@ public class ReservationApp {
             case "2":
                 makeReservation(user, scanner);
                 break;
+            case "3":
+                showUserReservations(user, scanner);
+                break;
+            case "4":
+                deleteBooking(user, scanner);
+                break;
             default:
                 System.out.println("Invalid input, please try again.");
         }
@@ -109,6 +117,9 @@ public class ReservationApp {
         System.out.println("2. Add a new coworking space");
         System.out.println("3. Show all coworking spaces");
         System.out.println("4. Edit a coworking space");
+        System.out.println("5. Make reservation");
+        System.out.println("6. Show all reservations");
+        System.out.println("7. Cancel reservation");
         System.out.println("0. Exit");
 
         switch (scanner.nextLine()) {
@@ -126,6 +137,15 @@ public class ReservationApp {
                 break;
             case "4":
                 editWorkspace(scanner);
+                break;
+            case "5":
+                makeReservation(user, scanner);
+                break;
+            case "6":
+                showUserReservations(user, scanner);
+                break;
+            case "7":
+                deleteBooking(user, scanner);
                 break;
             default:
                 System.out.println("Invalid input, please try again.");
@@ -218,13 +238,42 @@ public class ReservationApp {
         return timePeriod;
     }
 
+    private User chooseUser(Scanner scanner) {
+        User chosenUser;
+        System.out.println("Users list:");
+        for (Map.Entry<String, User> entry : userService.getAllUsers().entrySet()) {
+            System.out.println(entry.getValue().getUsername());
+        }
+
+        System.out.println("Please, enter username:");
+        String username = scanner.nextLine();
+
+        if (userService.userExists(username)) {
+            chosenUser = userService.login(username);
+            System.out.println("Chosen user: " + chosenUser.getUsername());
+            return chosenUser;
+        } else {
+            System.out.println("User was not found");
+            return null;
+        }
+    }
+
     private void makeReservation(User user, Scanner scanner) {
+        User bookingUser;
+        if (user.getIsAdmin()) {
+            bookingUser = chooseUser(scanner);
+        } else {
+            bookingUser = user;
+        }
+        if (bookingUser == null) return;
+
         Workspace workspace = chooseWorkspace(scanner);
         if (workspace == null) return;
+        
         TimePeriod timePeriod = readDate(scanner);
         if (timePeriod == null) return;
 
-        Booking booking = bookingService.createBooking(user, workspace, timePeriod);
+        Booking booking = bookingService.createBooking(bookingUser, workspace, timePeriod);
         if (booking == null) {
             Booking existingBooking = bookingService.findBookingForWorkspace(workspace, timePeriod);
             System.out.println("This workspace is already booked " + existingBooking.getTimePeriod().toString());
@@ -232,6 +281,35 @@ public class ReservationApp {
             System.out.println("Booking is created:");
             System.out.println(booking.toString());
         }
+    }
+
+    private void showUserReservations(User user, Scanner scanner) {
+        Map<Integer, Booking> bookings = user.getIsAdmin() ? bookingService.getAllBookings() : bookingService.getUserBookings(user);
+        System.out.println("Booking list:");
+        for (Map.Entry<Integer, Booking> entry : bookings.entrySet()) {
+            System.out.println(entry.getValue());
+        }
+    }
+
+    private void deleteBooking(User user, Scanner scanner) {
+        showUserReservations(user, scanner);
+        System.out.println("Please, enter id of booking you want to cancel:");
+        Booking booking;
+
+        try {
+            int bookingId = Integer.parseInt(scanner.nextLine());
+            booking = bookingService.getAllBookings().get(bookingId);
+            if (booking == null) {
+                System.out.println("Booking not found.");
+                return;
+            }
+        } catch (NumberFormatException ex) {
+            System.out.println("Invalid input.");
+            return;
+        }
+
+        bookingService.deleteBooking(booking);
+        System.out.println("Booking " + booking + " was successfully canceled");
     }
 
     private void logoutUser() {
