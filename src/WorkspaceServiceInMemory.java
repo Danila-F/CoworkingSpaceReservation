@@ -2,7 +2,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class WorkspaceServiceInMemory implements WorkspaceService {
-    private final Map<Integer, Workspace> workspaces = new TreeMap<>();
+    protected Map<Integer, Workspace> workspaces = new TreeMap<>();
 
     public Workspace createWorkspace(String description) {
         TreeMap<Integer, Workspace> treeWorkspaces = (TreeMap<Integer, Workspace>) workspaces;

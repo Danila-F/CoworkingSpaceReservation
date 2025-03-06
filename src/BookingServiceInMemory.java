@@ -3,7 +3,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class BookingServiceInMemory implements BookingService {
-    private final Map<Integer, Booking> bookings = new TreeMap<>();
+    protected Map<Integer, Booking> bookings = new TreeMap<>();
 
     private Map<Integer, Booking> getWorkspaceBookings(Workspace workspace) {
         Map<Integer, Booking> workspaceBookings = new HashMap<>();

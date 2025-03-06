@@ -1,0 +1,33 @@
+import java.io.*;
+import java.util.TreeMap;
+
+public class WorkspaceServiceInFile extends WorkspaceServiceInMemory implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+    private static final String FILE_PATH = "workspaces.ser";
+
+    public WorkspaceServiceInFile() {
+        deserialize();
+        Runtime.getRuntime().addShutdownHook(new Thread(this::serialize));
+    }
+
+    private void serialize() {
+        try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
+            stream.writeObject(workspaces);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void deserialize() {
+        File file = new File(FILE_PATH);
+        if (file.exists()) {
+            try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
+                workspaces = (TreeMap<Integer, Workspace>) stream.readObject();
+            } catch (IOException | ClassNotFoundException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+}

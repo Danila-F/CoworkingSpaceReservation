@@ -12,8 +12,8 @@ public class ReservationApp {
     private boolean running = true;
     private User user = null;
     private final UserService userService = new UserServiceInFile();
-    private final WorkspaceService workspaceService = new WorkspaceServiceInMemory();
-    private final BookingService bookingService = new BookingServiceInMemory();
+    private final WorkspaceService workspaceService = new WorkspaceServiceInFile();
+    private final BookingService bookingService = new BookingServiceInFile();
 
     private void run() {
         try (Scanner scanner = new Scanner(System.in)) {
