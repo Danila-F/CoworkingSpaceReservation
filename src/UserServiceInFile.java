@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.HashMap;
-import java.util.Map;
 
 public class UserServiceInFile extends UserServiceInMemory implements Serializable {
     @Serial
@@ -9,17 +8,26 @@ public class UserServiceInFile extends UserServiceInMemory implements Serializab
 
     public UserServiceInFile() {
         deserialize();
-
-        // Добавляем shutdown hook
         Runtime.getRuntime().addShutdownHook(new Thread(this::serialize));
     }
 
     private void serialize() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
-            oos.writeObject(super.users);
-            System.out.println("Объект UserServiceInMemory сохранён перед завершением.");
+        try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
+            stream.writeObject(users);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void deserialize() {
+        File file = new File(FILE_PATH);
+        if (file.exists()) {
+            try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
+                users = (HashMap<String, User>) stream.readObject();
+            } catch (IOException | ClassNotFoundException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }

@@ -11,7 +11,7 @@ public class ReservationApp {
 
     private boolean running = true;
     private User user = null;
-    private final UserServiceInMemory userService = new UserServiceInMemory();
+    private final UserService userService = new UserServiceInFile();
     private final WorkspaceService workspaceService = new WorkspaceServiceInMemory();
     private final BookingService bookingService = new BookingServiceInMemory();
 

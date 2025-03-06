@@ -2,7 +2,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserServiceInMemory implements UserService {
-    private final Map<String, User> users = new HashMap<>();
+    protected Map<String, User> users = new HashMap<>();
 
     private User addUser(User user) {
         users.put(user.getUsername(), user);
