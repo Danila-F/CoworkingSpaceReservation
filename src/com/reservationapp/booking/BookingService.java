@@ -1,3 +1,9 @@
+package com.reservationapp.booking;
+
+import com.reservationapp.user.*;
+import com.reservationapp.workspace.*;
+import com.reservationapp.booking.timeperiod.*;
+
 import java.util.Map;
 
 public interface BookingService {

@@ -1,3 +1,5 @@
+package com.reservationapp.workspace;
+
 import java.io.Serial;
 import java.io.Serializable;
 

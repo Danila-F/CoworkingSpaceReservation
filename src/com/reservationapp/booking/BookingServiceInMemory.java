@@ -1,3 +1,9 @@
+package com.reservationapp.booking;
+
+import com.reservationapp.user.*;
+import com.reservationapp.workspace.*;
+import com.reservationapp.booking.timeperiod.*;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;

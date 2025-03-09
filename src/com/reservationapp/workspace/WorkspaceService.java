@@ -1,3 +1,5 @@
+package com.reservationapp.workspace;
+
 import java.util.Map;
 
 public interface WorkspaceService {

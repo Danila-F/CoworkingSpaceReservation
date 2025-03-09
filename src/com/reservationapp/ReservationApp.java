@@ -1,3 +1,10 @@
+package com.reservationapp;
+
+import com.reservationapp.user.*;
+import com.reservationapp.workspace.*;
+import com.reservationapp.booking.*;
+import com.reservationapp.booking.timeperiod.*;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;

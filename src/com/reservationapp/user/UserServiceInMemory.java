@@ -1,3 +1,5 @@
+package com.reservationapp.user;
+
 import java.util.HashMap;
 import java.util.Map;
 
