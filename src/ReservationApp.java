@@ -224,13 +224,13 @@ public class ReservationApp {
             System.out.println("Please, enter end time of booking(" + dateTimeFormat + "):");
             endTime = LocalDateTime.parse(scanner.nextLine(), dateTimeFormatter);
         } catch (DateTimeParseException ex) {
-            System.out.println("Invalid input.");
+            System.out.println("Invalid input: " + ex.getMessage());
             return null;
         }
 
         try {
             timePeriod = new TimePeriod(startTime, endTime);
-        } catch (IllegalArgumentException ex) {
+        } catch (WrongTimePeriod ex) {
             System.out.println(ex.getLocalizedMessage());
             return null;
         }

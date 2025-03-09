@@ -34,11 +34,7 @@ public class Booking implements Serializable {
     }
 
     public boolean isBookedAtTime(TimePeriod requestedTimePeriod) {
-        if (timePeriod.isInPeriod(requestedTimePeriod.getStartTime()) || timePeriod.isInPeriod(requestedTimePeriod.getEndTime())) {
-            return true;
-        } else {
-            return false;
-        }
+        return timePeriod.isInPeriod(requestedTimePeriod.getStartTime()) || timePeriod.isInPeriod(requestedTimePeriod.getEndTime());
     }
 
     @Override

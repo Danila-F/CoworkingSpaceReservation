@@ -9,9 +9,9 @@ public class TimePeriod implements Serializable {
     private final LocalDateTime startTime;
     private final LocalDateTime endTime;
 
-    public TimePeriod(LocalDateTime startTime, LocalDateTime endTime) {
+    public TimePeriod(LocalDateTime startTime, LocalDateTime endTime) throws WrongTimePeriod {
         if (startTime.isAfter(endTime)) {
-            throw new IllegalArgumentException("Start time must be before end time!");
+            throw new WrongTimePeriod("Start time must be before end time!");
         }
         this.startTime = startTime;
         this.endTime = endTime;
