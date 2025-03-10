@@ -1,21 +1,21 @@
-package com.reservationapp.booking;
+package com.reservationapp.user;
 
 import java.io.*;
-import java.util.TreeMap;
+import java.util.HashMap;
 
-public class BookingServiceInFile extends BookingServiceInMemory implements Serializable {
+class UsersMapInFile extends UsersMapInMemory implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private static final String FILE_PATH = "bookings.ser";
-
-    public BookingServiceInFile() {
+    private static final String FILE_PATH = "users.ser";
+    
+    public UsersMapInFile() {
         deserialize();
         Runtime.getRuntime().addShutdownHook(new Thread(this::serialize));
     }
 
     private void serialize() {
         try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
-            stream.writeObject(bookings);
+            stream.writeObject(users);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -26,7 +26,7 @@ public class BookingServiceInFile extends BookingServiceInMemory implements Seri
         File file = new File(FILE_PATH);
         if (file.exists()) {
             try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
-                bookings = (TreeMap<Integer, Booking>) stream.readObject();
+                users = (HashMap<String, User>) stream.readObject();
             } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }

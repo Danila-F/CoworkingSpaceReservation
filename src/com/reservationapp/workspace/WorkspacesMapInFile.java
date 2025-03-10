@@ -1,20 +1,21 @@
 package com.reservationapp.workspace;
 
 import java.io.*;
-import java.util.TreeMap;
+import java.util.HashMap;
 
-public class WorkspaceServiceInFile extends WorkspaceServiceInMemory implements Serializable {
+class WorkspacesMapInFile extends WorkspacesMapInMemory implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     private static final String FILE_PATH = "workspaces.ser";
 
-    public WorkspaceServiceInFile() {
+    public WorkspacesMapInFile() {
         deserialize();
         Runtime.getRuntime().addShutdownHook(new Thread(this::serialize));
     }
 
     private void serialize() {
         try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
+            stream.writeObject(lastWorkspaceID);
             stream.writeObject(workspaces);
         } catch (IOException e) {
             e.printStackTrace();
@@ -26,7 +27,8 @@ public class WorkspaceServiceInFile extends WorkspaceServiceInMemory implements 
         File file = new File(FILE_PATH);
         if (file.exists()) {
             try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
-                workspaces = (TreeMap<Integer, Workspace>) stream.readObject();
+                lastWorkspaceID = (Integer) stream.readObject();
+                workspaces = (HashMap<Integer, Workspace>) stream.readObject();
             } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }

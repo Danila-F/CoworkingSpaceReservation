@@ -18,9 +18,9 @@ public class ReservationApp {
 
     private boolean running = true;
     private User user = null;
-    private final UserService userService = new UserServiceInFile();
-    private final WorkspaceService workspaceService = new WorkspaceServiceInFile();
-    private final BookingService bookingService = new BookingServiceInFile();
+    private final UserService userService = new UserService();
+    private final WorkspaceService workspaceService = new WorkspaceService();
+    private final BookingService bookingService = new BookingService();
 
     private void run() {
         try (Scanner scanner = new Scanner(System.in)) {
@@ -163,7 +163,11 @@ public class ReservationApp {
         System.out.println("Please, write a description for the new workspace:");
         String description = scanner.nextLine();
         Workspace workspace = workspaceService.createWorkspace(description);
-        System.out.println("Workspace " + workspace.getDescription() + " with ID " + workspace.getId() + " was created.");
+        if (workspace != null) {
+            System.out.println("Workspace " + workspace.getDescription() + " with ID " + workspace.getId() + " was created.");
+        } else {
+            System.out.println("Workspace was not created.");
+        }
     }
 
     private void showWorkspaces() {
