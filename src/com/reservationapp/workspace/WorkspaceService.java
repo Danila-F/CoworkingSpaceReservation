@@ -10,7 +10,7 @@ public class WorkspaceService{
         try {
             workspaces.add(workspace);
             return workspace;
-        } catch (WrongNewWorkspaceID ex) {
+        } catch (WrongNewWorkspaceIDException ex) {
             System.out.println(ex.getMessage());
             return null;
         }

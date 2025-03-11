@@ -8,9 +8,9 @@ class BookingsMapInMemory implements BookingsMap{
     protected Integer lastBookingID = 0;
 
     @Override
-    public void add(Booking booking) throws WrongNewBookingID{
+    public void add(Booking booking) throws WrongNewBookingIDException{
         if (booking.getId() != getNextID()) {
-            throw new WrongNewBookingID("You're trying to add booking with incorrect ID: " + booking.getId() + ", but it should be: " + getNextID());
+            throw new WrongNewBookingIDException("You're trying to add booking with incorrect ID: " + booking.getId() + ", but it should be: " + getNextID());
         } else {
             lastBookingID = booking.getId();
             bookings.put(lastBookingID, booking);

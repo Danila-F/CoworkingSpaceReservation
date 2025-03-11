@@ -36,7 +36,7 @@ public class BookingService {
         try {
             bookings.add(booking);
             return booking;
-        } catch (WrongNewBookingID ex) {
+        } catch (WrongNewBookingIDException ex) {
             System.out.println(ex.getMessage());
             return null;
         }

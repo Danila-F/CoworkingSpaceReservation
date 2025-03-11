@@ -241,7 +241,7 @@ public class ReservationApp {
 
         try {
             timePeriod = new TimePeriod(startTime, endTime);
-        } catch (WrongTimePeriod ex) {
+        } catch (WrongTimePeriodException ex) {
             System.out.println(ex.getLocalizedMessage());
             return null;
         }

@@ -8,9 +8,9 @@ class WorkspacesMapInMemory implements WorkspacesMap{
     protected Integer lastWorkspaceID = 0;
 
     @Override
-    public void add(Workspace workspace) throws WrongNewWorkspaceID{
+    public void add(Workspace workspace) throws WrongNewWorkspaceIDException{
         if (workspace.getId() != getNextID()) {
-            throw new WrongNewWorkspaceID("You're trying to add workspace with incorrect ID: " + workspace.getId() + ", but it should be: " + getNextID());
+            throw new WrongNewWorkspaceIDException("You're trying to add workspace with incorrect ID: " + workspace.getId() + ", but it should be: " + getNextID());
         } else {
             lastWorkspaceID = workspace.getId();
             workspaces.put(lastWorkspaceID, workspace);
