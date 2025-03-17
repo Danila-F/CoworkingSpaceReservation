@@ -108,7 +108,7 @@ public class ReservationApp {
                 makeReservation(user, scanner);
                 break;
             case "3":
-                showUserReservations(user, scanner);
+                showUserReservations(user);
                 break;
             case "4":
                 deleteBooking(user, scanner);
@@ -149,7 +149,7 @@ public class ReservationApp {
                 makeReservation(user, scanner);
                 break;
             case "6":
-                showUserReservations(user, scanner);
+                showUserReservations(user);
                 break;
             case "7":
                 deleteBooking(user, scanner);
@@ -290,11 +290,11 @@ public class ReservationApp {
             System.out.println("This workspace is already booked " + existingBooking.getTimePeriod().toString());
         } else {
             System.out.println("Booking is created:");
-            System.out.println(booking.toString());
+            System.out.println(booking);
         }
     }
 
-    private void showUserReservations(User user, Scanner scanner) {
+    private void showUserReservations(User user) {
         Map<Integer, Booking> bookings = user.getIsAdmin() ? bookingService.getAllBookings() : bookingService.getUserBookings(user);
         System.out.println("Booking list:");
         for (Map.Entry<Integer, Booking> entry : bookings.entrySet()) {
@@ -303,7 +303,7 @@ public class ReservationApp {
     }
 
     private void deleteBooking(User user, Scanner scanner) {
-        showUserReservations(user, scanner);
+        showUserReservations(user);
         System.out.println("Please, enter id of booking you want to cancel:");
         Booking booking;
 
