@@ -3,7 +3,7 @@ package com.reservationapp.user;
 import java.util.Map;
 
 public class UserService {
-    private final UsersMap users = new UsersMapInFile();
+    private final UsersMap users = new UsersMapWithStateSaving();
 
     public User signup(String username, boolean isAdmin) {
         users.add(new User(username, isAdmin));

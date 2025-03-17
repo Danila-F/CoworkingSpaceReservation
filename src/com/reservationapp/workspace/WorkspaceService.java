@@ -3,7 +3,7 @@ package com.reservationapp.workspace;
 import java.util.Map;
 
 public class WorkspaceService{
-    private final WorkspacesMap workspaces = new WorkspacesMapInFile();
+    private final WorkspacesMap workspaces = new WorkspacesMapWithStateSaving();
 
     public Workspace createWorkspace(String description) {
         Workspace workspace = new Workspace(workspaces.getNextID(), description);

@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BookingService {
-    private final BookingsMap bookings = new BookingsMapInFile();
+    private final BookingsMap bookings = new BookingsMapWithStateSaving();
 
     private Map<Integer, Booking> getWorkspaceBookings(Workspace workspace) {
         Map<Integer, Booking> workspaceBookings = new HashMap<>();
