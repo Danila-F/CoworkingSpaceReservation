@@ -49,4 +49,8 @@ public class Booking implements Serializable {
         "; Workspace: " + workspace.toString() +
         "; " + timePeriod.toString();
     }
+
+    public boolean equals(Booking booking) {
+        return (this.id == booking.id);
+    }
 }

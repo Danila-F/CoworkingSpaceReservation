@@ -35,7 +35,8 @@ public class BookingService {
     }
 
     public Optional<Booking> createBooking(User user, Workspace workspace, TimePeriod timePeriod) {
-        return Optional.ofNullable(findBookingForWorkspace(workspace, timePeriod))
+        return findBookingForWorkspace(workspace, timePeriod)
+                .map(existing -> Optional.<Booking>empty())
                 .orElseGet(() -> addBooking(user, workspace, timePeriod));
     }
 

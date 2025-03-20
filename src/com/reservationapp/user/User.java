@@ -22,4 +22,8 @@ public class User implements Serializable {
     public boolean getIsAdmin() {
         return isAdmin;
     }
+
+    public boolean equals(User user) {
+        return (this.username.equals(user.getUsername()));
+    }
 }

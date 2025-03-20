@@ -31,4 +31,8 @@ public class Workspace implements Serializable {
     public String toString() {
         return String.valueOf(id) + ". " + description;
     }
+
+    public boolean equals(Workspace workspace) {
+        return (this.id == workspace.id);
+    }
 }
