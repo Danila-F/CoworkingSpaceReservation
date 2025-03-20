@@ -4,65 +4,49 @@ import com.reservationapp.user.*;
 import com.reservationapp.workspace.*;
 import com.reservationapp.booking.timeperiod.*;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class BookingService {
     private final BookingsMap bookings = new BookingsMapWithStateSaving();
 
     private Map<Integer, Booking> getWorkspaceBookings(Workspace workspace) {
-        Map<Integer, Booking> workspaceBookings = new HashMap<>();
-        for (Map.Entry<Integer, Booking> entry : bookings.getAll().entrySet()) {
-            if (entry.getValue().getWorkspace().equals(workspace)) {
-                workspaceBookings.put(entry.getKey(), entry.getValue());
-            }
-        }
-        return workspaceBookings;
+        return bookings.getAll().entrySet().stream()
+                .filter(entry -> entry.getValue().getWorkspace().equals(workspace))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public Booking findBookingForWorkspace(Workspace workspace, TimePeriod timePeriod) {
-        Map<Integer, Booking> workspaceBookings = getWorkspaceBookings(workspace);
-        for (Map.Entry<Integer, Booking> entry : workspaceBookings.entrySet()) {
-            Booking booking = entry.getValue();
-            if (booking.isBookedAtTime(timePeriod)) {
-                return booking;
-            }
-        }
-        return null;
+    public Optional<Booking> findBookingForWorkspace(Workspace workspace, TimePeriod timePeriod) {
+        return getWorkspaceBookings(workspace).values().stream()
+                .filter(booking -> booking.isBookedAtTime(timePeriod))
+                .findFirst();
     }
 
-    private Booking addBooking(User user, Workspace workspace, TimePeriod timePeriod) {
+    private Optional<Booking> addBooking(User user, Workspace workspace, TimePeriod timePeriod) {
         Booking booking = new Booking(bookings.getNextID(), user, workspace, timePeriod);
         try {
             bookings.add(booking);
-            return booking;
+            return Optional.of(booking);
         } catch (WrongNewBookingIDException ex) {
             System.out.println(ex.getMessage());
-            return null;
+            return Optional.empty();
         }
     }
 
-     public Booking createBooking(User user, Workspace workspace, TimePeriod timePeriod) {
-         Booking existingBooking = findBookingForWorkspace(workspace, timePeriod);
-         if (existingBooking == null) {
-             return addBooking(user, workspace, timePeriod);
-         } else {
-             return null;
-         }
-     }
+    public Optional<Booking> createBooking(User user, Workspace workspace, TimePeriod timePeriod) {
+        return Optional.ofNullable(findBookingForWorkspace(workspace, timePeriod))
+                .orElseGet(() -> addBooking(user, workspace, timePeriod));
+    }
 
     public Map<Integer, Booking> getAllBookings() {
         return bookings.getAll();
     }
 
     public Map<Integer, Booking> getUserBookings(User user) {
-        Map<Integer, Booking> userBookings = new HashMap<>();
-        for (Map.Entry<Integer, Booking> entry : bookings.getAll().entrySet()) {
-            if (entry.getValue().getUser().equals(user)) {
-                userBookings.put(entry.getKey(), entry.getValue());
-            }
-        }
-        return userBookings;
+        return bookings.getAll().entrySet().stream()
+                .filter(entry -> entry.getValue().getUser().equals(user))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     public boolean deleteBooking(Booking booking) {

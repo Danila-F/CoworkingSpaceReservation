@@ -284,14 +284,13 @@ public class ReservationApp {
         TimePeriod timePeriod = readDate(scanner);
         if (timePeriod == null) return;
 
-        Booking booking = bookingService.createBooking(bookingUser, workspace, timePeriod);
-        if (booking == null) {
-            Booking existingBooking = bookingService.findBookingForWorkspace(workspace, timePeriod);
-            System.out.println("This workspace is already booked " + existingBooking.getTimePeriod().toString());
-        } else {
-            System.out.println("Booking is created:");
-            System.out.println(booking);
-        }
+        bookingService.createBooking(bookingUser, workspace, timePeriod).ifPresentOrElse(
+            booking -> System.out.println("Booking is created:\n" + booking),
+
+            () -> bookingService.findBookingForWorkspace(workspace, timePeriod).ifPresent(
+                existingBooking -> System.out.println("This workspace is already booked " + existingBooking.getTimePeriod())
+            )
+        );
     }
 
     private void showUserReservations(User user) {
@@ -319,8 +318,11 @@ public class ReservationApp {
             return;
         }
 
-        bookingService.deleteBooking(booking);
-        System.out.println("Booking " + booking + " was successfully canceled");
+        if (bookingService.deleteBooking(booking)) {
+            System.out.println("Booking " + booking + " was successfully canceled");
+        } else {
+            System.out.println("ERROR! Booking " + booking + " was NOT canceled");
+        }
     }
 
     private void logoutUser() {

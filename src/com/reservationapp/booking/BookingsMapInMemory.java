@@ -46,7 +46,9 @@ class BookingsMapInMemory implements BookingsMap{
     public boolean remove(int bookingID) {
         Booking removedBooking = bookings.remove(bookingID);
         if (removedBooking != null) {
-            if (removedBooking.getId() == lastBookingID) {
+            if (bookings.isEmpty()) {
+                lastBookingID = 0;
+            } else if (removedBooking.getId() == lastBookingID) {
                 lastBookingID--;
             }
             return true;
