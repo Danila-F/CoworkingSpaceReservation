@@ -40,7 +40,7 @@ public class Booking implements Serializable {
     }
 
     public boolean isBookedAtTime(TimePeriod requestedTimePeriod) {
-        return timePeriod.isInPeriod(requestedTimePeriod.getStartTime()) || timePeriod.isInPeriod(requestedTimePeriod.getEndTime());
+        return timePeriod.IntersectsPeriod(requestedTimePeriod);
     }
 
     @Override
